@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:layout_height="25sp"
+        android:text="Hello World!"
+   />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:onClick="click1"
+        android:text="Test1"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:onClick="click3"
+        android:text="FeedBack"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:onClick="click2"
+        android:text="ERROR"/>
+    <Button
+        android:id="@+id/first_mybtn"
+        android:onClick="click4"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:text="second activity"/>
+    <Button
+        android:id="@+id/mybtn1"
+        android:onClick="click5"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:text="metrics"/>
+</android.support.v7.widget.LinearLayoutCompat>
