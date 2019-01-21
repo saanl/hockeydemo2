@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 def version = 4
 android {
-    signingConfigs {
-        debugkey {
-            keyAlias 'debugkey'
-            keyPassword 'ly1234'
-            storeFile file('C:/Users/willl/debugkey.crt')
-            storePassword '123456'
-        }
-    }
+//    signingConfigs {
+//        debugkey {
+//            keyAlias 'debugkey'
+//            keyPassword 'ly1234'
+//            storeFile file('C:/Users/willl/debugkey.crt')
+//            storePassword '123456'
+//        }
+//    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.willl.hockeydemo2"
