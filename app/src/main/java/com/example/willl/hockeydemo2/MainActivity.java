@@ -15,6 +15,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
+
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
 import net.hockeyapp.android.FeedbackActivity;
@@ -61,13 +65,34 @@ public class MainActivity extends AppCompatActivity {
 
         HockeyLog.setLogLevel(Log.VERBOSE);
 
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
+
+        appcenter();
 
         registerHockey();
         checkVersion();
         login();
+        metricinit();
+        feedbackinit();
+
+        
+    }
+
+
+
+
+    public void appcenter(){
+        AppCenter.start(getApplication(), "5b175709-3882-4cf8-a62e-a28f5b151b3f",
+                Analytics.class, Crashes.class);
+    }
+
+
+    public void metricinit(){
         MetricsManager.register(getApplication());
         MetricsManager.trackEvent("start");
+    }
+
+    public void feedbackinit(){
         FeedbackManager.register(this, new FeedbackManagerListener() {
 //            @Override
 //            public Class<? extends FeedbackActivity> getFeedbackActivityClass() {
@@ -84,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        FeedbackManager.setActivityForScreenshot(this);
+        // FeedbackManager.setActivityForScreenshot(this);
     }
 
     public void click5(View view) throws IOException {
