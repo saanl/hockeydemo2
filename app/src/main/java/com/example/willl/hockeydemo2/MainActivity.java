@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
+import com.microsoft.appcenter.push.Push;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         metricinit();
         feedbackinit();
 
-        
+
     }
 
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void appcenter(){
         AppCenter.start(getApplication(), "5b175709-3882-4cf8-a62e-a28f5b151b3f",
-                Analytics.class, Crashes.class);
+                Analytics.class, Crashes.class, Push.class);
     }
 
 
