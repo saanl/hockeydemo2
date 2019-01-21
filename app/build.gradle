@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def version = 4
+def version = 5
 android {
 //    signingConfigs {
 //        debugkey {
@@ -44,3 +44,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+apply plugin: 'com.google.gms.google-services'

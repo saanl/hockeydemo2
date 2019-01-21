@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
+import com.microsoft.appcenter.crashes.CrashesListener;
+import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog;
+import com.microsoft.appcenter.crashes.model.ErrorReport;
 import com.microsoft.appcenter.push.Push;
 
 import net.hockeyapp.android.CrashManager;
@@ -85,6 +88,41 @@ public class MainActivity extends AppCompatActivity {
     public void appcenter(){
         AppCenter.start(getApplication(), "5b175709-3882-4cf8-a62e-a28f5b151b3f",
                 Analytics.class, Crashes.class, Push.class);
+        Push.setEnabled(true);
+        //Crashes.generateTestCrash();
+        Crashes.hasCrashedInLastSession();
+        Crashes.getLastSessionCrashReport();
+        Crashes.setListener(new CrashesListener() {
+            @Override
+            public boolean shouldProcess(ErrorReport report) {
+                return true;
+            }
+
+            @Override
+            public boolean shouldAwaitUserConfirmation() {
+                return false;
+            }
+
+            @Override
+            public Iterable<ErrorAttachmentLog> getErrorAttachments(ErrorReport report) {
+                return null;
+            }
+
+            @Override
+            public void onBeforeSending(ErrorReport report) {
+                Log.e("APPCENTER TEST:","onBeforeSending");
+            }
+
+            @Override
+            public void onSendingFailed(ErrorReport report, Exception e) {
+                Log.e("APPCENTER TEST:","onSendingFailed");
+            }
+
+            @Override
+            public void onSendingSucceeded(ErrorReport report) {
+                Log.e("APPCENTER TEST:","onSendingSucceeded");
+            }
+        });
     }
 
 
