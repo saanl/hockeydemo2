@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -22,6 +23,8 @@ import com.microsoft.appcenter.crashes.CrashesListener;
 import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog;
 import com.microsoft.appcenter.crashes.model.ErrorReport;
 import com.microsoft.appcenter.push.Push;
+import com.microsoft.appcenter.push.PushListener;
+import com.microsoft.appcenter.push.PushNotification;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.CrashManagerListener;
@@ -56,9 +59,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private MyBroadcast myBroadcast;
 
 
 
@@ -70,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         HockeyLog.setLogLevel(Log.VERBOSE);
 
         //getSupportActionBar().hide();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.my.secondActivity");
+        myBroadcast = new MyBroadcast();
+        registerReceiver(myBroadcast,intentFilter);
 
         appcenter();
 
@@ -83,12 +93,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    public void click6(View view){
+        Toast.makeText(this,"click6",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent();
+        //设置广播的名字（设置Action）
+        intent.setAction("net.hockeyapp.android.SCREENSHOT");
+        //intent.putExtra("data","ss");
+        //发送广播（无序广播）
+        sendBroadcast(intent);
+    }
 
     public void appcenter(){
+        //
         AppCenter.start(getApplication(), "5b175709-3882-4cf8-a62e-a28f5b151b3f",
-                Analytics.class, Crashes.class, Push.class);
+                Analytics.class, Crashes.class,Push.class);
         Push.setEnabled(true);
+        Push.setListener(new PushListener() {
+            @Override
+            public void onPushNotificationReceived(Activity activity, PushNotification pushNotification) {
+                Log.e("APPCENTER PUSH:",pushNotification.getMessage());
+                Toast.makeText(MainActivity.this,pushNotification.getTitle(),Toast.LENGTH_LONG).show();
+            }
+        });
         //Crashes.generateTestCrash();
         Crashes.hasCrashedInLastSession();
         Crashes.getLastSessionCrashReport();
@@ -138,19 +164,46 @@ public class MainActivity extends AppCompatActivity {
 //                return MyFeedBackActivity.class;
 //            }
 
-            @Override
+                    @Override
+                    public boolean shouldCreateNewFeedbackThread() {
+                        return false;
+                    }
+
+                    @Override
             public boolean feedbackAnswered(FeedbackMessage latestMessage) {
+                Log.e("^^^^^^^^^^^^^^^","Called when an answer to a feedback is available.");
                 Log.e("FeedbackManager:getName",latestMessage.getName());
                 Log.e("FeedbackManager:getAppId",latestMessage.getAppId());
                 Log.e("FeedbackManager:getOem",latestMessage.getOem());
                 Log.e("FeedbackManager:getText",latestMessage.getText());
                 Log.e("FeedbackManager:getToken",latestMessage.getToken());
-                return false;
-            }
-        });
-        // FeedbackManager.setActivityForScreenshot(this);
-    }
+                Log.e("FeedbackManager:getToken",latestMessage.getId()+"");
+                Log.e("^^^^^^^^^^^^^^^","Called when an answer to a feedback is available.");
+                StringBuilder sb = new StringBuilder();
+                SharedPreferences preferences = getApplicationContext().getSharedPreferences("net.hockeyapp.android.feedback", 0);
+                int idLastMessageSend = preferences.getInt("idLastMessageSend", -1);
+                int idLastMessageProcessed = preferences.getInt("idLastMessageProcessed", -1);
+                SharedPreferences tokenS = getApplicationContext().getSharedPreferences("net.hockeyapp.android.prefs_feedback_token", 0);
+                String tokenSString = tokenS.getString("net.hockeyapp.android.prefs_key_feedback_token", "无");
 
+                sb.append("本地储存：idLastMessageSend=").append(idLastMessageSend);
+                sb.append(" idLastMessageProcessed="+idLastMessageProcessed);
+                sb.append(" token="+tokenSString);
+                sb.append("本次回复消息：Token="+latestMessage.getToken()).append(" id="+latestMessage.getId());
+
+                writeToDisk(sb.toString());
+                return true;
+            }
+        }
+
+        );
+         FeedbackManager.setActivityForScreenshot(this);
+    }
+    public void click3(View view){
+
+        FeedbackManager.showFeedbackActivity(MainActivity.this);
+
+    }
     public void click5(View view) throws IOException {
         FileInputStream fileInputStream = null;
         File dir = new File(getApplicationContext().getFilesDir(), "/net.hockeyapp.android/telemetry/");
@@ -181,6 +234,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void writeToDisk(String value){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String s = UUID.randomUUID().toString();
+        String format = sdf.format(new Date());
+        SharedPreferences sharedPreferences = this.getSharedPreferences("LiuYang", MODE_PRIVATE);
+        sharedPreferences.edit().putString(format+" "+s,value).apply();
+    }
+
     public void click4(View view){
         Log.e("*********","click4");
         MetricsManager.trackEvent("main activity click4");
@@ -188,17 +249,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void click3(View view){
 
-        FeedbackManager.showFeedbackActivity(MainActivity.this);
-
-    }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterManagers();
+        unregisterReceiver(myBroadcast);
     }
 
     public void login(){

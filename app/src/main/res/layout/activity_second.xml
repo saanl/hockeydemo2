@@ -11,4 +11,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/second_btn"
         android:text="crash"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/second_btn2"
+        android:onClick="click2"
+        android:text="send broadcast"/>
 </android.support.v7.widget.LinearLayoutCompat>
