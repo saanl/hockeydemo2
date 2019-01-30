@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+#-printconfiguration 'D:\hockeydemo2\app\build\outputs\mapping\debug\config.txt'
+#-dump 'D:\hockeydemo2\app\build\outputs\mapping\debug\mapping.txt\classfile.txt'
+#-keepclassmembers public class com.example.willl.hockeydemo2.MyUpdateFragment{
+#    *;
+#}

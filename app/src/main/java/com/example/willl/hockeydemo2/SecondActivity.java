@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import net.hockeyapp.android.FeedbackManager;
 import net.hockeyapp.android.metrics.MetricsManager;
 
 public class SecondActivity extends AppCompatActivity {
@@ -40,5 +41,9 @@ public class SecondActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void click3(View view){
+        Toast.makeText(this,"click",Toast.LENGTH_LONG).show();
+        FeedbackManager.takeScreenshot(getApplicationContext());
     }
 }

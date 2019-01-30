@@ -17,4 +17,10 @@
         android:id="@+id/second_btn2"
         android:onClick="click2"
         android:text="send broadcast"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/second_btn3"
+        android:onClick="click3"
+        android:text="截图"/>
 </android.support.v7.widget.LinearLayoutCompat>

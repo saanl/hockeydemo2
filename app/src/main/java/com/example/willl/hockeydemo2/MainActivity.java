@@ -1,21 +1,22 @@
 package com.example.willl.hockeydemo2;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.TrafficStats;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.willl.hockeydemo2.test.Father;
+import com.example.willl.hockeydemo2.test.Son;
+import com.example.willl.hockeydemo2.test.Test;
+import com.example.willl.hockeydemo2.test.TopExceptionHandler;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
@@ -33,26 +34,20 @@ import net.hockeyapp.android.FeedbackManager;
 import net.hockeyapp.android.FeedbackManagerListener;
 import net.hockeyapp.android.LoginManager;
 import net.hockeyapp.android.LoginManagerListener;
-import net.hockeyapp.android.UpdateActivity;
 import net.hockeyapp.android.UpdateFragment;
 import net.hockeyapp.android.UpdateManager;
 import net.hockeyapp.android.UpdateManagerListener;
 import net.hockeyapp.android.metrics.MetricsManager;
-import net.hockeyapp.android.objects.CrashManagerUserInput;
-import net.hockeyapp.android.objects.CrashMetaData;
 import net.hockeyapp.android.objects.FeedbackMessage;
 import net.hockeyapp.android.utils.HockeyLog;
 
 import org.json.JSONArray;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -81,15 +76,20 @@ public class MainActivity extends AppCompatActivity {
         myBroadcast = new MyBroadcast();
         registerReceiver(myBroadcast,intentFilter);
 
-        appcenter();
+        Thread.setDefaultUncaughtExceptionHandler(new TopExceptionHandler(this));
 
+
+
+
+
+        appcenter();
         registerHockey();
         checkVersion();
         login();
         metricinit();
         feedbackinit();
 
-
+       // TextView
     }
 
 
@@ -101,6 +101,11 @@ public class MainActivity extends AppCompatActivity {
         //intent.putExtra("data","ss");
         //发送广播（无序广播）
         sendBroadcast(intent);
+        Test test = new Test();
+        Object testthis = test.testthis();
+        Toast.makeText(this,testthis.getClass().getCanonicalName(),Toast.LENGTH_LONG).show();
+        String canonicalName = testthis.getClass().getCanonicalName();
+        Log.e("*&*&*&*&**&*&*&*&*",canonicalName);
     }
 
     public void appcenter(){
@@ -116,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //Crashes.generateTestCrash();
+        Analytics.trackEvent("开机");
+
         Crashes.hasCrashedInLastSession();
         Crashes.getLastSessionCrashReport();
         Crashes.setListener(new CrashesListener() {
@@ -159,13 +166,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void feedbackinit(){
         FeedbackManager.register(this, new FeedbackManagerListener() {
-//            @Override
-//            public Class<? extends FeedbackActivity> getFeedbackActivityClass() {
-//                return MyFeedBackActivity.class;
-//            }
+            @Override
+            public Class<? extends FeedbackActivity> getFeedbackActivityClass() {
+                return MyFeedBackActivity.class;
+            }
 
-                    @Override
-                    public boolean shouldCreateNewFeedbackThread() {
+            @Override
+            public boolean shouldCreateNewFeedbackThread() {
                         return false;
                     }
 
@@ -192,17 +199,17 @@ public class MainActivity extends AppCompatActivity {
                 sb.append("本次回复消息：Token="+latestMessage.getToken()).append(" id="+latestMessage.getId());
 
                 writeToDisk(sb.toString());
-                return true;
+                return false;
             }
         }
 
         );
-         FeedbackManager.setActivityForScreenshot(this);
+       //  FeedbackManager.setActivityForScreenshot(this);
     }
     public void click3(View view){
 
         FeedbackManager.showFeedbackActivity(MainActivity.this);
-
+        //FeedbackManager.checkForAnswersAndNotify(this);
     }
     public void click5(View view) throws IOException {
         FileInputStream fileInputStream = null;
@@ -447,6 +454,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
     public void checkVersion(){
         UpdateManager.register(this, new UpdateManagerListener() {
             @Override
@@ -455,10 +464,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-//            @Override
-//            public Class<? extends UpdateFragment> getUpdateFragmentClass() {
-//                return MyUpdateFragment.class;
-//            }
+            @Override
+            public Class<? extends UpdateFragment> getUpdateFragmentClass() {
+                return MyUpdateFragment.class;
+            }
 
             @Override
             public Date getExpiryDate() {

@@ -22,6 +22,10 @@ public class MyUpdateFragment extends UpdateFragment {
 
     public MyUpdateFragment() {
         // Required empty public constructor
+        String canonicalName = this.getClass().getCanonicalName();
+        String canonicalName1 = super.getClass().getCanonicalName();
+        Log.e("***********son****************",canonicalName);
+        Log.e("************father***************",canonicalName1);
     }
 
     public static MyUpdateFragment newInstance(String param1, String param2) {

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def version = 5
+def version = 4
 android {
 //    signingConfigs {
 //        debugkey {
@@ -19,10 +19,15 @@ android {
         versionName version + ".0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [HOCKEYAPP_APP_ID: "678683c19a7d4ca9ab57c6cd7fe45bad"]
+        multiDexEnabled false
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
